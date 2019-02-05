@@ -16,7 +16,9 @@ spec:
             imagePullPolicy: Always
             env:
             - name: RELEASE
-              value: "v0.1.7"
+              value: "v0.1.8"
+            - name: NOTIFS_FOR_APP
+              value: "gocr" # name of the app to send notifications for
             - name: APP_TOKEN
               valueFrom:
                 secretKeyRef:

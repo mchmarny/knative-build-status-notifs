@@ -2,6 +2,7 @@ package pushover
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -15,9 +16,10 @@ const (
 )
 
 var (
-	appToke    = os.Getenv("APP_TOKEN")
-	userToken  = os.Getenv("USR_TOKEN")
-	sendStatus = []string{"SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT"}
+	appToke          = os.Getenv("APP_TOKEN")
+	userToken        = os.Getenv("USR_TOKEN")
+	sendStatus       = []string{"SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT"}
+	sendNotifsForApp = os.Getenv("NOTIFS_FOR_APP")
 )
 
 // Send sends the message
@@ -27,8 +29,15 @@ func Send(msg *build.CloudBuildNotification) error {
 		return fmt.Errorf("Null message on send: %v", msg)
 	}
 
+	// to limit number of notifications in Pushover check the name of the app
+	if sendNotifsForApp != msg.Substitutions.AppName {
+		log.Printf("App not for send [NOTIFS_FOR_APP]: %s", msg.Substitutions.AppName)
+		return nil
+	}
+
 	// check if status is to be sent
 	if !isStatusForSend(msg.Status) {
+		log.Printf("Status not for send: %s != [%s]", msg.Status, strings.Join(sendStatus, ","))
 		return nil
 	}
 
