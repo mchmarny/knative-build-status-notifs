@@ -1,0 +1,16 @@
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: GcpPubSubSource
+metadata:
+  name: cloud-build-status-source
+  namespace: demo
+spec:
+  googleCloudProject: s9-demo
+  topic: cloud-builds
+  gcpCredsSecret:
+    name: google-cloud-key
+    key: key.json
+  sink:
+    apiVersion: serving.knative.dev/v1alpha1
+    kind: Service
+    name: slacknotifs
+    namespace: demo

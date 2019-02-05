@@ -1,0 +1,29 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: slacknotifs
+  namespace: demo
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          labels:
+            demo: slacknotifs
+        spec:
+          container:
+            image: gcr.io/s9-demo/slacknotifs:latest
+            imagePullPolicy: Always
+            env:
+            - name: RELEASE
+              value: "v0.1.7"
+            - name: APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slacknotifs-secrets
+                  key: APP_TOKEN
+            - name: USR_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slacknotifs-secrets
+                  key: USR_TOKEN
