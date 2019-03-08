@@ -12,5 +12,5 @@ spec:
   sink:
     apiVersion: serving.knative.dev/v1alpha1
     kind: Service
-    name: slacknotifs
+    name: build-notif
     namespace: demo

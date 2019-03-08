@@ -25,9 +25,8 @@ This setup assumes you already have
 First, create a secret with the pushover tokens
 
 ```shell
-kubectl create secret generic slacknotifs-secrets -n demo \
-	--from-literal=APP_TOKEN=$PUSHOVER_APP_TOKEN \
-	--from-literal=USR_TOKEN=$PUSHOVER_USR_TOKEN
+kubectl create secret generic build-notif-secrets -n demo \
+	--from-literal=SLACK_API_TOKEN=$SLACK_API_TOKEN
 ```
 
 Build this notification service
@@ -35,24 +34,24 @@ Build this notification service
 ```shell
 gcloud builds submit \
 	--project $GCP_PROJECT \
-	--tag gcr.io/${GCP_PROJECT}/slacknotifs
+	--tag gcr.io/${GCP_PROJECT}/build-notif
 ```
 
 And edit `config/service.yaml` with your GCP project ID
 
 ```yaml
 container:
-    image: gcr.io/YOUR_PROJECT_ID_HERE/slacknotifs:latest
+    image: gcr.io/YOUR_PROJECT_ID_HERE/build-notif:latest
     imagePullPolicy: Always
 ```
 
-After your done all these steps, you should be able to see the `slacknotifs` status as `Running`
+After your done all these steps, you should be able to see the `build-notif` status as `Running`
 
 ```shell
 $: kubectl get pods -n demo
 
 NAME                                                            READY     STATUS      RESTARTS   AGE
-slacknotifs-00001-deployment-745db8fcb-xf97f                    3/3       Running     0          1h
+build-notif-00001-deployment-745db8fcb-xf97f                    3/3       Running     0          1h
 ```
 
 ### Setup Build Status Event Source
@@ -74,7 +73,7 @@ spec:
   sink:
     apiVersion: serving.knative.dev/v1alpha1
     kind: Service
-    name: slacknotifs
+    name: build-notif
     namespace: demo
 ```
 
@@ -87,7 +86,7 @@ To demo the notifications, simply create a release tag on the repo and you shoul
 1. Check Notification service logs
 
 ```shell
-kail -d slacknotifs-00006-deployment -n demo -c user-container --since 2h
+kail -d build-notif-00006-deployment -n demo -c user-container --since 2h
 ```
 
 

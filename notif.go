@@ -1,4 +1,4 @@
-package build
+package main
 
 // CloudBuildNotification represents message from Cloud Build
 type CloudBuildNotification struct {

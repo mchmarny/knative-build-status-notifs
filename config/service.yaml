@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: slacknotifs
+  name: build-notif
   namespace: demo
 spec:
   runLatest:
@@ -9,23 +9,21 @@ spec:
       revisionTemplate:
         metadata:
           labels:
-            demo: slacknotifs
+            demo: build-notif
         spec:
           container:
-            image: gcr.io/s9-demo/slacknotifs:latest
+            image: gcr.io/s9-demo/build-notif:latest
             imagePullPolicy: Always
             env:
             - name: RELEASE
-              value: "v0.1.8"
+              value: "v0.1.9"
             - name: NOTIFS_FOR_APP
               value: "gocr" # name of the app to send notifications for
-            - name: APP_TOKEN
+            - name: SLACK_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: slacknotifs-secrets
-                  key: APP_TOKEN
-            - name: USR_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: slacknotifs-secrets
-                  key: USR_TOKEN
+                  name: build-notif-secrets
+                  key: SLACK_API_TOKEN
+            - name: SLACK_BUILD_STATUS_CHANNEL
+              value: CGUKV76EA #channel ID, not the name
+

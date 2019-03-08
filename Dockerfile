@@ -11,7 +11,7 @@ ENV GO111MODULE=on
 RUN go mod download
 
 # build
-WORKDIR /src/cmd/service/
+WORKDIR /src/
 RUN CGO_ENABLED=0 go build -v -o /knotif
 
 
