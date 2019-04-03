@@ -17,7 +17,7 @@ func handleMessage(ctx context.Context, msg *pubsub.Message) error {
 		log.Printf("Received Cloud Event Context as: %v", ec)
 	} else {
 		log.Printf("No Cloud Event Context found")
-	}
+	}z
 	if len(msg.Data) > 0 {
 		obj := &CloudBuildNotification{}
 		err := json.Unmarshal(msg.Data, obj)

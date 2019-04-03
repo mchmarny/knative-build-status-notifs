@@ -2,23 +2,18 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
   name: build-notif
-  namespace: demo
 spec:
   runLatest:
     configuration:
       revisionTemplate:
-        metadata:
-          labels:
-            demo: build-notif
         spec:
           container:
             image: gcr.io/s9-demo/build-notif:latest
-            imagePullPolicy: Always
             env:
             - name: RELEASE
-              value: "v0.1.9"
+              value: "v0.1.10"
             - name: NOTIFS_FOR_APP
-              value: "gocr" # name of the app to send notifications for
+              value: "maxprime" # name of the app to send notifications for
             - name: SLACK_API_TOKEN
               valueFrom:
                 secretKeyRef:

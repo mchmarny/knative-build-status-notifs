@@ -2,7 +2,6 @@ apiVersion: sources.eventing.knative.dev/v1alpha1
 kind: GcpPubSubSource
 metadata:
   name: cloud-build-status-source
-  namespace: demo
 spec:
   googleCloudProject: s9-demo
   topic: cloud-builds
@@ -10,7 +9,6 @@ spec:
     name: google-cloud-key
     key: key.json
   sink:
-    apiVersion: serving.knative.dev/v1alpha1
-    kind: Service
-    name: build-notif
-    namespace: demo
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Broker
+    name: default
