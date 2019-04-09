@@ -11,8 +11,8 @@ import (
 
 var (
 	sendNotifsForApp = os.Getenv("NOTIFS_FOR_APP")
-	sendStatus       = []string{"SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT"}
-	token          = os.Getenv("SLACK_API_TOKEN")
+	sendStatus       = []string{"WORKING", "SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT"}
+	token            = os.Getenv("SLACK_API_TOKEN")
 	channel          = os.Getenv("SLACK_BUILD_STATUS_CHANNEL")
 )
 
