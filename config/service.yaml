@@ -11,7 +11,7 @@ spec:
             image: gcr.io/s9-demo/build-notif:latest
             env:
             - name: RELEASE
-              value: "v0.1.10"
+              value: "v0.1.11"
             - name: NOTIFS_FOR_APP
               value: "maxprime" # name of the app to send notifications for
             - name: SLACK_API_TOKEN
