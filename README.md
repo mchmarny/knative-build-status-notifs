@@ -56,14 +56,13 @@ build-notif-00001-deployment-745db8fcb-xf97f                    3/3       Runnin
 
 ### Setup Build Status Event Source
 
-Assuming you have Knative Eventing and PubSub event source already configured, you can simply connect your PubSub queue that was created automatically by Cloud Build with the previously deployed service using `GcpPubSubSource` manifest
+Assuming you have Knative Eventing and PubSub event source already configured, you can simply connect your PubSub queue that was created automatically by Cloud Build with this simple `GcpPubSubSource` event source manifest:
 
 ```yaml
 apiVersion: sources.eventing.knative.dev/v1alpha1
 kind: GcpPubSubSource
 metadata:
   name: cloud-build-status-source
-  namespace: demo
 spec:
   googleCloudProject: s9-demo
   topic: cloud-builds
@@ -71,11 +70,28 @@ spec:
     name: google-cloud-key
     key: key.json
   sink:
-    apiVersion: serving.knative.dev/v1alpha1
-    kind: Service
-    name: build-notif
-    namespace: demo
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Broker
+    name: default
 ```
+
+### Setup Event Trigger 
+
+The above event source will publish events into the default broker in that namespace so all we have to do next is to create a `Trigger` that connects to the `Service` using this manifest: 
+
+```yaml
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: slacker-build-status-notifier
+spec:
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1alpha1
+      kind: Service
+      name: build-notif
+```
+
 
 ## Demo
 
