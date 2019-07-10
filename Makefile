@@ -1,11 +1,16 @@
 
-.PHONY: event
+.PHONY: event mod
 
 
-image:
+mod:
+	go mod tidy
+	go mod vendor
+
+
+image: mod
 	gcloud builds submit \
-		--project $(GCP_PROJECT) \
-		--tag gcr.io/$(GCP_PROJECT)/build-notif
+		--project cloudylabs-public \
+		--tag gcr.io/cloudylabs-public/build-notif:0.4.1
 
 source:
 	kubectl apply -f config/source.yaml

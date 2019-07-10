@@ -3,7 +3,7 @@ kind: GcpPubSubSource
 metadata:
   name: cloud-build-status-source
 spec:
-  googleCloudProject: s9-demo
+  googleCloudProject: cloudylabs
   topic: cloud-builds
   gcpCredsSecret:
     name: google-cloud-key

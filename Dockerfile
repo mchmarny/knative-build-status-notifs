@@ -1,28 +1,19 @@
-# BUILD STAGE
-FROM golang:latest as build
+# BUILD
+FROM golang:latest as builder
 
-# copy
-WORKDIR /go/src/github.com/mchmarny/knative-build-status-notifs/
+# COPY
+WORKDIR /src/
 COPY . /src/
 
-# dependancies
-WORKDIR /src/
+# BUILD
 ENV GO111MODULE=on
-RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -a -tags netgo \
+    -ldflags '-w -extldflags "-static"' \
+    -mod vendor \
+    -o knotif
 
-# build
-WORKDIR /src/
-RUN CGO_ENABLED=0 go build -v -o /knotif
-
-
-
-# RUN STAGE
-FROM alpine as release
-RUN apk add --no-cache ca-certificates
-
-# app executable
-COPY --from=build /knotif /app/
-
-# run
-WORKDIR /app/
-ENTRYPOINT ["./knotif"]
+# RUN
+FROM gcr.io/distroless/static
+COPY --from=builder /src/knotif .
+ENTRYPOINT ["/knotif"]
